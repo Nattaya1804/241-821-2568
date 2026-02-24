@@ -1,58 +1,39 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const mysql = require('mysql2/promise');
 const app = express();
 const port = 8000
 app.use(bodyParser.json());
-let users = []
-let counter = 1;
-app.get('/users',(req, res) => {
-    res.json(users);
-});
 
-
-app.post('/user', (req, res) => {
-    let user = req.body;
-    user.id = counter
-    counter += 1;
-
-    users.push(user);
-    res.json({
-        message: 'User added successfully',
-        user: user });
+let conn = null
+const initDBConnection = async () => {
+    conn = await mysql.createConnection({
+        host: 'localhost',
+        user: 'root',
+        password: 'root',
+        database: 'webdb',
+        port: 8821
     })
+}
 
-app.patch('/user/:id', (req, res) => {
-    let id = req.params.id;
-    let uqdatedUser = req.body;
+//path = GET /users สำหรับ get ข้อมูล user ทั้งหมด
+app.get('/users', async (req, res) => {
+    const results = await conn.query('SELECT * FROM users');
+    res.json(results[0]);
+})
 
-    let seletedIndex = users.findIndex(user => user.id == id);
-
-    if (uqdatedUser.name) {
-        users[seletedIndex].name = uqdatedUser.name;
-    }
-    if (uqdatedUser.email) {
-        users[seletedIndex].email = uqdatedUser.email;
-    }
-
+// path = POST /users สำหรับเพิ่ม user ใหม่
+app.post('/users', async (req, res) => {
+   let user = req.body;
+   const results = await conn.query('INSERT INTO users SET ?', user);
+   console.log('results:', results);
     res.json({
-        message: 'User updated successfully',
-        data: {
-            user: updatedUser,
-            indexUpdated: seletedIndex
-        }
+        message: 'User created successfully',
+        data: results[0]
     });
 })
 
-app.delete('/user/:id', (req, res) => {
-    let id = req-params.id;
-    let seletedIndex = users.findLastIndex(user => user.id ==id);
-    users.splice(seletedIndex, 1);
-    res.json({
-        message: 'User deleted successfully',
-        indexDeleted: seletedIndex
-    });
-})
-
-app.listen(port, () => {
-    console.log('Server is running on port ${port}')
+app.listen(port, async () => {
+    await initDBConnection();
+    console.log(`Server is running on port ${port}`)
 });

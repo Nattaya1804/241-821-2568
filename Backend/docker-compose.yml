@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   db:
     image: mysql:8.0 # ปรับเป็น MySQL 8.0 เพื่อความทันสมัย (หรือใช้ 5.7 ตามเดิมได้หากต้องการ)
@@ -35,7 +33,7 @@ services:
     restart: always
 
 networks:
-  weblab700:
+  weblab821:
     driver: bridge
 
 volumes:
