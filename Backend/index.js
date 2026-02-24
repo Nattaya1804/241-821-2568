@@ -5,6 +5,7 @@ const app = express();
 const port = 8000
 app.use(bodyParser.json());
 
+// อันล่าสุด 
 let conn = null
 const initDBConnection = async () => {
     conn = await mysql.createConnection({
