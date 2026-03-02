@@ -100,6 +100,26 @@ textarea {
     resize: vertical; /* ให้ยืดหดได้แค่แนวตั้ง */
 }
 
+.message {
+    background-color: #ddd;
+    padding: 10px;
+    border-radius: 6px;
+    margin-top: 15px;
+    display: none;;
+}
+
+.message.success {
+    background-color: #4CAF50;
+    color: white;
+    display: block
+}
+
+.message.danger {
+    background-color: #f44336;
+    color: white;
+    display: block
+}
+
 /* จัดกึ่งกลางปุ่ม (.center) */
 .center {
     text-align: center;
